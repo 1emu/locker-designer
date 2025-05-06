@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Custom Kitchen Locker Designer</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+      .container {
+        display: flex;
+        flex-direction: column;
+        max-width: 1200px;
+        margin: 0 auto;
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .controls-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-bottom: 20px;
+      }
+      .control-group {
+        flex: 1;
+        min-width: 300px;
+        padding: 15px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+      }
+      .control-item {
+        margin-bottom: 15px;
+      }
+      .control-item label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      .control-item input[type="range"] {
+        width: 100%;
+      }
+      .control-item .value-display {
+        font-size: 0.9em;
+        color: #666;
+        text-align: right;
+      }
+      .color-options {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+      }
+      .color-option {
+        width: 30px;
+        height: 30px;
+        /* border-radius: 50%; */
+        cursor: pointer;
+        border: 2px solid transparent;
+      }
+      .color-option.selected {
+        border-color: #000;
+      }
+      .visualization {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+        position: relative;
+      }
+      .floor {
+        height: 10px;
+        width: 100%;
+        background-color: #8b4513;
+        margin-top: -5px;
+      }
+      .measurements {
+        position: absolute;
+        bottom: -40px;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        font-size: 14px;
+        color: #666;
+      }
+      .details-panel {
+        margin-top: 50px;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+      }
+      .details-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 15px;
+      }
+      .detail-item {
+        margin-bottom: 10px;
+      }
+      .detail-item .label {
+        font-weight: bold;
+        margin-right: 10px;
+      }
+      .btn {
+        padding: 10px 15px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 20px;
+      }
+      .btn:hover {
+        background-color: #45a049;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Custom Kitchen Locker Designer</h1>
+      <p>
+        Adjust the parameters below to customize your kitchen locker. The
+        visualization will update in real-time.
+      </p>
+
+      <div class="controls-container">
+        <div class="control-group">
+          <h3>Size</h3>
+          <div class="control-item">
+            <label for="height">Height (cm)</label>
+            <input
+              type="range"
+              id="height"
+              min="180"
+              max="185"
+              value="182"
+              step="1"
+            />
+            <div class="value-display">
+              <span id="height-value">182</span> cm
+            </div>
+          </div>
+          <div class="control-item">
+            <label for="width">Width (cm)</label>
+            <input
+              type="range"
+              id="width"
+              min="120"
+              max="128"
+              value="124"
+              step="1"
+            />
+            <div class="value-display">
+              <span id="width-value">124</span> cm
+            </div>
+          </div>
+          <div class="control-item">
+            <label for="depth">Depth (cm)</label>
+            <input
+              type="range"
+              id="depth"
+              min="40"
+              max="60"
+              value="50"
+              step="1"
+            />
+            <div class="value-display"><span id="depth-value">50</span> cm</div>
+          </div>
+          <div class="control-item">
+            <label for="legs-length">Legs Length (cm)</label>
+            <input
+              type="range"
+              id="legs-length"
+              min="0"
+              max="20"
+              value="10"
+              step="1"
+            />
+            <div class="value-display">
+              <span id="legs-length-value">10</span> cm
+            </div>
+          </div>
+          <div class="control-item">
+            <label for="legs-width">Leg Width (cm)</label>
+            <select id="legs-width">
+              <option value="2" selected>2 cm</option>
+              <option value="10">10 cm</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <h3>Configuration</h3>
+          <div class="control-item">
+            <label for="columns">Number of Columns</label>
+            <input
+              type="range"
+              id="columns"
+              min="3"
+              max="4"
+              value="3"
+              step="1"
+            />
+            <div class="value-display">
+              <span id="columns-value">3</span> columns
+            </div>
+          </div>
+          <div class="control-item">
+            <label for="cleaning-column-position"
+              >Cleaning Column Position</label
+            >
+            <select id="cleaning-column-position">
+              <option value="left">Left</option>
+              <option value="middle">Middle</option>
+              <option value="right" selected>Right</option>
+            </select>
+          </div>
+          <div class="control-item">
+            <label for="shelves-per-column">Shelves in Regular Columns</label>
+            <input
+              type="range"
+              id="shelves-per-column"
+              min="3"
+              max="6"
+              value="4"
+              step="1"
+            />
+            <div class="value-display">
+              <span id="shelves-value">4</span> shelves
+            </div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <h3>Appearance</h3>
+          <div class="control-item">
+            <label>Locker Color</label>
+            <div class="color-options">
+              <div
+                class="color-option selected"
+                style="background-color: #f5f5f0"
+                data-color="#F5F5F0"
+                data-name="Blanco Sucio"
+              ></div>
+              <div
+                class="color-option"
+                style="background-color: #f7f3d7"
+                data-color="#F7F3D7"
+                data-name="Beige"
+              ></div>
+              <div
+                class="color-option"
+                style="background-color: #fffdd0"
+                data-color="#FFFDD0"
+                data-name="Crema"
+              ></div>
+              <div
+                class="color-option"
+                style="background-color: #ffff54"
+                data-color="#FFFF54"
+                data-name="Amarillo"
+              ></div>
+              <div
+                class="color-option"
+                style="background-color: #bdbdbd"
+                data-color="#BDBDBD"
+                data-name="Gris Claro"
+              ></div>
+              <div
+                class="color-option"
+                style="background-color: #f6c6c6"
+                data-color="#F6C6C6"
+                data-name="Rosa Pastel"
+              ></div>
+              <div
+                class="color-option"
+                style="background-color: #b6e8f7"
+                data-color="#B6E8F7"
+                data-name="Celeste Pastel"
+              ></div>
+              <div
+                class="color-option"
+                style="background-color: #b6b6e8"
+                data-color="#B6B6E8"
+                data-name="Violeta Pastel"
+              ></div>
+              <div
+                class="color-option"
+                style="background-color: #b6e8c6"
+                data-color="#B6E8C6"
+                data-name="Verde agua"
+              ></div>
+              <div
+                class="color-option"
+                style="background-color: #5b7f5b"
+                data-color="#5B7F5B"
+                data-name="Verde Medio"
+              ></div>
+              <div
+                class="color-option"
+                style="background-color: #3c5b3c"
+                data-color="#3C5B3C"
+                data-name="Verde Ingles"
+              ></div>
+              <div
+                class="color-option"
+                style="background-color: #ffa726"
+                data-color="#FFA726"
+                data-name="Naranja"
+              ></div>
+              <div
+                class="color-option"
+                style="background-color: #f44336"
+                data-color="#F44336"
+                data-name="Rojo"
+              ></div>
+              <div
+                class="color-option"
+                style="background-color: #e25822"
+                data-color="#E25822"
+                data-name="Bermellón"
+              ></div>
+              <div
+                class="color-option"
+                style="background-color: #6d6a6a"
+                data-color="#6D6A6A"
+                data-name="Gris Topo"
+              ></div>
+              <div
+                class="color-option"
+                style="background-color: #7b4a12"
+                data-color="#7B4A12"
+                data-name="Marrón Brillante"
+              ></div>
+              <div
+                class="color-option"
+                style="background-color: #0000ff"
+                data-color="#0000FF"
+                data-name="Azul Brillante"
+              ></div>
+              <div
+                class="color-option"
+                style="background-color: #000000"
+                data-color="#000000"
+                data-name="Negro"
+              ></div>
+            </div>
+          </div>
+          <div class="control-item">
+            <label for="door-type">Door Type</label>
+            <select id="door-type">
+              <option value="standard" selected>Standard</option>
+              <option value="perforated">Perforated</option>
+              <option value="glass">Glass Insert</option>
+            </select>
+          </div>
+          <div class="control-item">
+            <label for="handle-style">Handle Style</label>
+            <select id="handle-style">
+              <option value="vertical" selected>Vertical</option>
+              <option value="horizontal">Horizontal</option>
+              <option value="recessed">Recessed</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="visualization">
+        <svg
+          id="locker-visual"
+          width="500"
+          height="400"
+          viewBox="0 0 500 400"
+        ></svg>
+        <div class="measurements" id="measurements"></div>
+      </div>
+      <div class="floor"></div>
+
+      <div class="details-panel">
+        <div class="details-title">Locker Specifications</div>
+        <div class="detail-item">
+          <span class="label">External Dimensions:</span>
+          <span id="dimensions-details"
+            >124 × 50 × 182 cm (Width × Depth × Height)</span
+          >
+        </div>
+        <div class="detail-item">
+          <span class="label">Configuration:</span>
+          <span id="config-details"
+            >3 columns with 1 cleaning column (right position)</span
+          >
+        </div>
+        <div class="detail-item">
+          <span class="label">Storage Capacity:</span>
+          <span id="capacity-details"
+            >8 regular shelves + 1 cleaning supplies area</span
+          >
+        </div>
+        <div class="detail-item">
+          <span class="label">Material:</span> Steel with powder coat finish
+        </div>
+        <div class="detail-item">
+          <span class="label">Color:</span>
+          <span id="color-details">Blanco Sucio (#F5F5F0)</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Shelf Height (regular columns):</span>
+          <span id="shelf-height-details">43 cm</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Special Features:</span> Lockable doors,
+          ventilation at base
+        </div>
+      </div>
+
+      <button class="btn" id="save-design">Save Design</button>
+    </div>
+
+    <script>
+      // DOM Elements
+      const heightSlider = document.getElementById("height");
+      const heightValue = document.getElementById("height-value");
+      const widthSlider = document.getElementById("width");
+      const widthValue = document.getElementById("width-value");
+      const depthSlider = document.getElementById("depth");
+      const depthValue = document.getElementById("depth-value");
+      const columnsSlider = document.getElementById("columns");
+      const columnsValue = document.getElementById("columns-value");
+      const shelvesSlider = document.getElementById("shelves-per-column");
+      const shelvesValue = document.getElementById("shelves-value");
+      const cleaningColumnPos = document.getElementById(
+        "cleaning-column-position"
+      );
+      const doorType = document.getElementById("door-type");
+      const handleStyle = document.getElementById("handle-style");
+      const colorOptions = document.querySelectorAll(".color-option");
+      const svg = document.getElementById("locker-visual");
+      const measurements = document.getElementById("measurements");
+      const dimensionsDetails = document.getElementById("dimensions-details");
+      const configDetails = document.getElementById("config-details");
+      const capacityDetails = document.getElementById("capacity-details");
+      const colorDetails = document.getElementById("color-details");
+      const shelfHeightDetails = document.getElementById(
+        "shelf-height-details"
+      );
+      const saveButton = document.getElementById("save-design");
+      const legsLengthSlider = document.getElementById("legs-length");
+      const legsLengthValue = document.getElementById("legs-length-value");
+      const legsWidthSelect = document.getElementById("legs-width");
+
+      // State
+      let currentColor = "#F5F5F0";
+      let currentColorName = "Blanco Sucio";
+
+      // Update functions
+      function updateValue(slider, valueElement) {
+        valueElement.textContent = slider.value;
+      }
+
+      function updateLocker() {
+        const height = parseInt(heightSlider.value);
+        const width = parseInt(widthSlider.value);
+        const depth = parseInt(depthSlider.value);
+        const columns = parseInt(columnsSlider.value);
+        const shelves = parseInt(shelvesSlider.value);
+        const cleaningPos = cleaningColumnPos.value;
+        const legsLength = parseInt(legsLengthSlider.value);
+        const legsWidth = parseInt(legsWidthSelect.value);
+
+        // Update details
+        dimensionsDetails.textContent = `${width} × ${depth} × ${height} cm (Width × Depth × Height)`;
+        configDetails.textContent = `${columns} columns with 1 cleaning column (${cleaningPos} position)`;
+        capacityDetails.textContent = `${
+          shelves * (columns - 1)
+        } regular shelves + 1 cleaning supplies area`;
+        // Shelf height calculation
+        const shelfHeight = ((height - legsLength) / shelves).toFixed(1);
+        shelfHeightDetails.textContent = `${shelfHeight} cm`;
+
+        // Clear SVG
+        svg.innerHTML = "";
+
+        // Calculate scaling factor
+        const svgWidth = 500;
+        const svgHeight = 400;
+        const scale =
+          Math.min(svgWidth / width, svgHeight / (height + legsLength)) * 0.8;
+
+        // Calculate dimensions in SVG space
+        const scaledWidth = width * scale;
+        const scaledHeight = height * scale;
+        const scaledLegs = legsLength * scale;
+
+        // Center the locker (account for legs)
+        const offsetX = (svgWidth - scaledWidth) / 2;
+        const offsetY = (svgHeight - (scaledHeight + scaledLegs)) / 2;
+
+        // Create main locker outline
+        const lockerBody = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "rect"
+        );
+        lockerBody.setAttribute("x", offsetX);
+        lockerBody.setAttribute("y", offsetY);
+        lockerBody.setAttribute("width", scaledWidth);
+        lockerBody.setAttribute("height", scaledHeight);
+        lockerBody.setAttribute("fill", currentColor);
+        lockerBody.setAttribute("stroke", "#000");
+        lockerBody.setAttribute("stroke-width", "2");
+        svg.appendChild(lockerBody);
+
+        // Draw legs (always two, at the left and right edges)
+        const legWidth = legsWidth * scale;
+        // Left leg
+        const leftLeg = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "rect"
+        );
+        leftLeg.setAttribute("x", offsetX);
+        leftLeg.setAttribute("y", offsetY + scaledHeight);
+        leftLeg.setAttribute("width", legWidth);
+        leftLeg.setAttribute("height", scaledLegs);
+        leftLeg.setAttribute("fill", "#888");
+        leftLeg.setAttribute("stroke", "#444");
+        leftLeg.setAttribute("stroke-width", "1");
+        svg.appendChild(leftLeg);
+        // Right leg
+        const rightLeg = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "rect"
+        );
+        rightLeg.setAttribute("x", offsetX + scaledWidth - legWidth);
+        rightLeg.setAttribute("y", offsetY + scaledHeight);
+        rightLeg.setAttribute("width", legWidth);
+        rightLeg.setAttribute("height", scaledLegs);
+        rightLeg.setAttribute("fill", "#888");
+        rightLeg.setAttribute("stroke", "#444");
+        rightLeg.setAttribute("stroke-width", "1");
+        svg.appendChild(rightLeg);
+
+        // Calculate column width
+        const columnWidthActual = scaledWidth / columns;
+
+        // Draw columns
+        // Determine which column is the cleaning column
+        let cleaningColIdx = -1;
+        if (cleaningPos === "left") cleaningColIdx = 0;
+        else if (cleaningPos === "middle")
+          cleaningColIdx = Math.floor(columns / 2);
+        else if (cleaningPos === "right") cleaningColIdx = columns - 1;
+
+        // For regular columns, pair them for gate-style handles
+        let regularColIndices = [];
+        for (let i = 0; i < columns; i++) {
+          if (i !== cleaningColIdx) regularColIndices.push(i);
+        }
+        // Pair up regular columns
+        let pairs = [];
+        for (let i = 0; i < regularColIndices.length; i += 2) {
+          if (i + 1 < regularColIndices.length) {
+            pairs.push([regularColIndices[i], regularColIndices[i + 1]]);
+          } else {
+            pairs.push([regularColIndices[i]]); // last unpaired
+          }
+        }
+
+        for (let i = 0; i < columns; i++) {
+          const columnX = offsetX + i * columnWidthActual;
+
+          // Column divider (except for the last column)
+          if (i < columns - 1) {
+            const divider = document.createElementNS(
+              "http://www.w3.org/2000/svg",
+              "line"
+            );
+            divider.setAttribute("x1", columnX + columnWidthActual);
+            divider.setAttribute("y1", offsetY);
+            divider.setAttribute("x2", columnX + columnWidthActual);
+            divider.setAttribute("y2", offsetY + scaledHeight);
+            divider.setAttribute("stroke", "#000");
+            divider.setAttribute("stroke-width", "2");
+            svg.appendChild(divider);
+          }
+
+          // Determine if this is the cleaning column
+          let isCleaningColumn = i === cleaningColIdx;
+
+          // Draw door
+          const door = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "rect"
+          );
+          door.setAttribute("x", columnX + 2);
+          door.setAttribute("y", offsetY + 2);
+          door.setAttribute("width", columnWidthActual - 4);
+          door.setAttribute("height", scaledHeight - 4);
+          door.setAttribute("fill", currentColor);
+          door.setAttribute("stroke", "#000");
+          door.setAttribute("stroke-width", "1");
+          svg.appendChild(door);
+
+          // Door handle logic
+          let handleX = null;
+          if (isCleaningColumn) {
+            // Cleaning column: handle on the right edge
+            handleX = columnX + columnWidthActual - 10;
+          } else {
+            // Find which pair this column belongs to and if it's left or right in the pair
+            let pairIdx = pairs.findIndex((pair) => pair.includes(i));
+            if (pairIdx !== -1 && pairs[pairIdx].length === 2) {
+              if (pairs[pairIdx][0] === i) {
+                // Left column of pair: handle on right edge
+                handleX = columnX + columnWidthActual - 10;
+              } else {
+                // Right column of pair: handle on left edge
+                handleX = columnX + 10;
+              }
+            } else {
+              // Unpaired: handle on right edge
+              handleX = columnX + columnWidthActual - 10;
+            }
+          }
+
+          // Door handle
+          if (handleStyle.value === "vertical") {
+            const handle = document.createElementNS(
+              "http://www.w3.org/2000/svg",
+              "line"
+            );
+            handle.setAttribute("x1", handleX);
+            handle.setAttribute("y1", offsetY + scaledHeight / 2 - 15);
+            handle.setAttribute("x2", handleX);
+            handle.setAttribute("y2", offsetY + scaledHeight / 2 + 15);
+            handle.setAttribute("stroke", "#000");
+            handle.setAttribute("stroke-width", "3");
+            svg.appendChild(handle);
+          } else if (handleStyle.value === "horizontal") {
+            const handle = document.createElementNS(
+              "http://www.w3.org/2000/svg",
+              "line"
+            );
+            handle.setAttribute("x1", handleX - 15);
+            handle.setAttribute("y1", offsetY + scaledHeight / 2);
+            handle.setAttribute("x2", handleX + 15);
+            handle.setAttribute("y2", offsetY + scaledHeight / 2);
+            handle.setAttribute("stroke", "#000");
+            handle.setAttribute("stroke-width", "3");
+            svg.appendChild(handle);
+          } else if (handleStyle.value === "recessed") {
+            const handle = document.createElementNS(
+              "http://www.w3.org/2000/svg",
+              "rect"
+            );
+            handle.setAttribute("x", handleX - 10);
+            handle.setAttribute("y", offsetY + scaledHeight / 2 - 5);
+            handle.setAttribute("width", "20");
+            handle.setAttribute("height", "10");
+            handle.setAttribute("fill", "#555");
+            handle.setAttribute("rx", "2");
+            svg.appendChild(handle);
+          }
+
+          // Draw lock (match handle logic)
+          let lockX = null;
+          if (isCleaningColumn) {
+            lockX = columnX + columnWidthActual - 10;
+          } else {
+            let pairIdx = pairs.findIndex((pair) => pair.includes(i));
+            if (pairIdx !== -1 && pairs[pairIdx].length === 2) {
+              if (pairs[pairIdx][0] === i) {
+                // Left column of pair: lock on right edge
+                lockX = columnX + columnWidthActual - 10;
+              } else {
+                // Right column of pair: lock on left edge
+                lockX = columnX + 10;
+              }
+            } else {
+              // Unpaired: lock on right edge
+              lockX = columnX + columnWidthActual - 10;
+            }
+          }
+          const lock = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "circle"
+          );
+          lock.setAttribute("cx", lockX);
+          lock.setAttribute("cy", offsetY + scaledHeight / 2 + 30);
+          lock.setAttribute("r", "3");
+          lock.setAttribute("fill", "#000");
+          svg.appendChild(lock);
+
+          // Draw cleaning column or shelves
+          if (isCleaningColumn) {
+            // Top shelf for cleaning column
+            const shelfY = offsetY + 30;
+            const shelf = document.createElementNS(
+              "http://www.w3.org/2000/svg",
+              "line"
+            );
+            shelf.setAttribute("x1", columnX + 2);
+            shelf.setAttribute("y1", shelfY);
+            shelf.setAttribute("x2", columnX + columnWidthActual - 2);
+            shelf.setAttribute("y2", shelfY);
+            shelf.setAttribute("stroke", "#000");
+            shelf.setAttribute("stroke-width", "1");
+            shelf.setAttribute("stroke-dasharray", "2");
+            svg.appendChild(shelf);
+
+            // Draw a broom symbol
+            const broom = document.createElementNS(
+              "http://www.w3.org/2000/svg",
+              "line"
+            );
+            broom.setAttribute("x1", columnX + columnWidthActual / 2);
+            broom.setAttribute("y1", shelfY + 20);
+            broom.setAttribute("x2", columnX + columnWidthActual / 2);
+            broom.setAttribute("y2", offsetY + scaledHeight - 20);
+            broom.setAttribute("stroke", "#555");
+            broom.setAttribute("stroke-width", "2");
+            svg.appendChild(broom);
+
+            const broomBottom = document.createElementNS(
+              "http://www.w3.org/2000/svg",
+              "rect"
+            );
+            broomBottom.setAttribute("x", columnX + columnWidthActual / 2 - 10);
+            broomBottom.setAttribute("y", offsetY + scaledHeight - 30);
+            broomBottom.setAttribute("width", "20");
+            broomBottom.setAttribute("height", "10");
+            broomBottom.setAttribute("fill", "#8B4513");
+            svg.appendChild(broomBottom);
+          } else {
+            // Regular shelves
+            const shelfHeight = (scaledHeight - 6) / shelves;
+            for (let j = 1; j < shelves; j++) {
+              const shelfY = offsetY + j * shelfHeight;
+              const shelf = document.createElementNS(
+                "http://www.w3.org/2000/svg",
+                "line"
+              );
+              shelf.setAttribute("x1", columnX + 2);
+              shelf.setAttribute("y1", shelfY);
+              shelf.setAttribute("x2", columnX + columnWidthActual - 2);
+              shelf.setAttribute("y2", shelfY);
+              shelf.setAttribute("stroke", "#000");
+              shelf.setAttribute("stroke-width", "1");
+              shelf.setAttribute("stroke-dasharray", "2");
+              svg.appendChild(shelf);
+            }
+          }
+        }
+
+        // Update measurements text
+        measurements.textContent = `Width: ${width}cm × Depth: ${depth}cm × Height: ${height}cm`;
+      }
+
+      // Event listeners
+      heightSlider.addEventListener("input", () => {
+        updateValue(heightSlider, heightValue);
+        updateLocker();
+      });
+
+      widthSlider.addEventListener("input", () => {
+        updateValue(widthSlider, widthValue);
+        updateLocker();
+      });
+
+      depthSlider.addEventListener("input", () => {
+        updateValue(depthSlider, depthValue);
+        updateLocker();
+      });
+
+      columnsSlider.addEventListener("input", () => {
+        updateValue(columnsSlider, columnsValue);
+        updateLocker();
+      });
+
+      shelvesSlider.addEventListener("input", () => {
+        updateValue(shelvesSlider, shelvesValue);
+        updateLocker();
+      });
+
+      cleaningColumnPos.addEventListener("change", updateLocker);
+      doorType.addEventListener("change", updateLocker);
+      handleStyle.addEventListener("change", updateLocker);
+
+      colorOptions.forEach((option) => {
+        option.addEventListener("click", () => {
+          // Update selected color
+          colorOptions.forEach((opt) => opt.classList.remove("selected"));
+          option.classList.add("selected");
+          currentColor = option.dataset.color;
+          currentColorName = option.dataset.name;
+          colorDetails.textContent = `${currentColorName} (${currentColor})`;
+          updateLocker();
+        });
+      });
+
+      legsLengthSlider.addEventListener("input", () => {
+        legsLengthValue.textContent = legsLengthSlider.value;
+        updateLocker();
+      });
+
+      legsWidthSelect.addEventListener("change", updateLocker);
+
+      saveButton.addEventListener("click", () => {
+        alert(
+          "Design saved! You can share these specifications with CEOFIC to get a quote."
+        );
+      });
+
+      function getColorName(hex) {
+        // This function is now replaced by the color picker logic using data-name
+        return currentColorName;
+      }
+
+      // Initialize
+      updateLocker();
+    </script>
+  </body>
+</html>
