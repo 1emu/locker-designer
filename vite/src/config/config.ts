@@ -3,7 +3,7 @@ import type { ColorOption, LockerConfig } from "../types/types";
 export const CONFIG: LockerConfig = {
   HEIGHT: { min: 60, max: 200, default: 180 },
   WIDTH: { min: 35, max: 400, default: 120 },
-  DEPTH: { min: 38, max: 60, default: 50 },
+  DEPTH: { min: 38, max: 60, default: 52 },
   LEGS_LENGTH: { min: 0, max: 20, default: 10 },
   LEGS_WIDTH: { options: [2, 10], default: 2 },
   COLUMNS: { min: 2, max: 5, default: 3 },
