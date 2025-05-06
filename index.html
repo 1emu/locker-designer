@@ -419,7 +419,50 @@
         </div>
       </div>
 
-      <button class="btn" id="save-design">Save Design</button>
+      <button
+        class="btn"
+        id="copy-url-btn"
+        style="display: flex; align-items: center; gap: 8px"
+      >
+        <span>Share your design</span>
+        <svg
+          id="copy-icon"
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+        >
+          <rect
+            x="5"
+            y="7"
+            width="9"
+            height="10"
+            rx="2"
+            stroke="white"
+            stroke-width="1"
+          />
+          <rect
+            x="10"
+            y="3"
+            width="9"
+            height="10"
+            rx="2"
+            stroke="white"
+            stroke-width="1"
+          />
+        </svg>
+      </button>
+      <span
+        id="copy-feedback"
+        style="
+          margin-left: 12px;
+          color: #4caf50;
+          font-weight: bold;
+          display: none;
+        "
+        >Copied!</span
+      >
     </div>
 
     <script>
@@ -449,7 +492,8 @@
       const shelfHeightDetails = document.getElementById(
         "shelf-height-details"
       );
-      const saveButton = document.getElementById("save-design");
+      const copyUrlBtn = document.getElementById("copy-url-btn");
+      const copyFeedback = document.getElementById("copy-feedback");
       const legsLengthSlider = document.getElementById("legs-length");
       const legsLengthValue = document.getElementById("legs-length-value");
       const legsWidthSelect = document.getElementById("legs-width");
@@ -809,10 +853,123 @@
 
       legsWidthSelect.addEventListener("change", updateLocker);
 
-      saveButton.addEventListener("click", () => {
-        alert(
-          "Design saved! You can share these specifications with CEOFIC to get a quote."
-        );
+      // --- Add this utility for serializing state to query string ---
+      function getCurrentParams() {
+        return {
+          height: heightSlider.value,
+          width: widthSlider.value,
+          depth: depthSlider.value,
+          legsLength: legsLengthSlider.value,
+          legsWidth: legsWidthSelect ? legsWidthSelect.value : 2,
+          columns: columnsSlider.value,
+          cleaningColumnPos: cleaningColumnPos.value,
+          shelves: shelvesSlider.value,
+          color: currentColor,
+          colorName: currentColorName,
+          doorType: doorType.value,
+          handleStyle: handleStyle.value,
+        };
+      }
+      function toQueryString(params) {
+        return Object.entries(params)
+          .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+          .join("&");
+      }
+      function applyParamsFromUrl() {
+        const url = new URL(window.location.href);
+        const params = url.searchParams;
+        // Validation helpers
+        function clamp(val, min, max) {
+          val = Number(val);
+          if (isNaN(val)) return min;
+          return Math.max(min, Math.min(max, val));
+        }
+        function pick(val, allowed, fallback) {
+          return allowed.includes(val) ? val : fallback;
+        }
+        // Set values if present and valid
+        if (params.has("height"))
+          heightSlider.value = clamp(params.get("height"), 180, 185);
+        if (params.has("width"))
+          widthSlider.value = clamp(params.get("width"), 120, 128);
+        if (params.has("depth"))
+          depthSlider.value = clamp(params.get("depth"), 40, 60);
+        if (params.has("legsLength"))
+          legsLengthSlider.value = clamp(params.get("legsLength"), 0, 20);
+        if (typeof legsWidthSelect !== "undefined" && legsWidthSelect) {
+          if (params.has("legsWidth"))
+            legsWidthSelect.value = pick(
+              params.get("legsWidth"),
+              ["2", "10"],
+              "2"
+            );
+        }
+        if (params.has("columns"))
+          columnsSlider.value = clamp(params.get("columns"), 3, 4);
+        if (params.has("cleaningColumnPos"))
+          cleaningColumnPos.value = pick(
+            params.get("cleaningColumnPos"),
+            ["left", "middle", "right"],
+            "right"
+          );
+        if (params.has("shelves"))
+          shelvesSlider.value = clamp(params.get("shelves"), 3, 6);
+        if (params.has("color")) {
+          // Find color option with this hex
+          let found = false;
+          colorOptions.forEach((opt) => {
+            if (
+              opt.dataset.color.toLowerCase() ===
+              params.get("color").toLowerCase()
+            ) {
+              colorOptions.forEach((o) => o.classList.remove("selected"));
+              opt.classList.add("selected");
+              currentColor = opt.dataset.color;
+              currentColorName = opt.dataset.name;
+              colorDetails.textContent = `${currentColorName} (${currentColor})`;
+              found = true;
+            }
+          });
+          if (!found) {
+            // fallback: do nothing, keep default
+          }
+        }
+        if (params.has("doorType"))
+          doorType.value = pick(
+            params.get("doorType"),
+            ["standard", "perforated", "glass"],
+            "standard"
+          );
+        if (params.has("handleStyle"))
+          handleStyle.value = pick(
+            params.get("handleStyle"),
+            ["vertical", "horizontal", "recessed"],
+            "vertical"
+          );
+        // Update all value displays
+        updateValue(heightSlider, heightValue);
+        updateValue(widthSlider, widthValue);
+        updateValue(depthSlider, depthValue);
+        updateValue(columnsSlider, columnsValue);
+        updateValue(shelvesSlider, shelvesValue);
+        if (typeof legsLengthValue !== "undefined")
+          legsLengthValue.textContent = legsLengthSlider.value;
+        updateLocker();
+      }
+      // --- On page load, apply params ---
+      window.addEventListener("DOMContentLoaded", applyParamsFromUrl);
+      // --- Copy URL button: copy to clipboard and show feedback ---
+      copyUrlBtn.addEventListener("click", () => {
+        const params = getCurrentParams();
+        const url = `${window.location.origin}${
+          window.location.pathname
+        }?${toQueryString(params)}`;
+        navigator.clipboard.writeText(url).then(() => {
+          copyFeedback.style.display = "inline";
+          setTimeout(() => {
+            copyFeedback.style.display = "none";
+          }, 1500);
+        });
       });
 
       function getColorName(hex) {
