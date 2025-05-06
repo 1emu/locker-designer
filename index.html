@@ -466,6 +466,40 @@
     </div>
 
     <script>
+      // --- CONFIGURATION: All magic numbers and defaults here ---
+      const CONFIG = {
+        HEIGHT: { min: 60, max: 200, default: 180 },
+        WIDTH: { min: 35, max: 408, default: 120 },
+        DEPTH: { min: 38, max: 60, default: 50 },
+        LEGS_LENGTH: { min: 0, max: 20, default: 10 },
+        LEGS_WIDTH: { options: [2, 10], default: 2 },
+        COLUMNS: { min: 2, max: 5, default: 3 },
+        SHELVES: { min: 3, max: 6, default: 4 },
+        CLEANING_COLUMN_POS: ["left", "middle", "right"],
+        DOOR_TYPES: ["standard", "perforated", "glass"],
+        HANDLE_STYLES: ["vertical", "horizontal", "recessed"],
+        COLOR_OPTIONS: [
+          { hex: "#F5F5F0", name: "Blanco Sucio" },
+          { hex: "#F7F3D7", name: "Beige" },
+          { hex: "#FFFDD0", name: "Crema" },
+          { hex: "#FFFF54", name: "Amarillo" },
+          { hex: "#BDBDBD", name: "Gris Claro" },
+          { hex: "#F6C6C6", name: "Rosa Pastel" },
+          { hex: "#B6E8F7", name: "Celeste Pastel" },
+          { hex: "#B6B6E8", name: "Violeta Pastel" },
+          { hex: "#B6E8C6", name: "Verde agua" },
+          { hex: "#5B7F5B", name: "Verde Medio" },
+          { hex: "#3C5B3C", name: "Verde Ingles" },
+          { hex: "#FFA726", name: "Naranja" },
+          { hex: "#F44336", name: "Rojo" },
+          { hex: "#E25822", name: "Bermellón" },
+          { hex: "#6D6A6A", name: "Gris Topo" },
+          { hex: "#7B4A12", name: "Marrón Brillante" },
+          { hex: "#0000FF", name: "Azul Brillante" },
+          { hex: "#000000", name: "Negro" },
+        ],
+      };
+
       // DOM Elements
       const heightSlider = document.getElementById("height");
       const heightValue = document.getElementById("height-value");
