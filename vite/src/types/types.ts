@@ -17,6 +17,7 @@ export interface LockerConfig {
   LEGS_WIDTH: OptionsConfig<number>;
   COLUMNS: Range;
   SHELVES: Range;
+  CLEANING_COLUMN_WIDTH: Range;
   CLEANING_COLUMN_POS: string[];
   DOOR_TYPES: string[];
   HANDLE_STYLES: string[];
@@ -35,6 +36,7 @@ export interface LockerState {
   legsWidth: number;
   columns: number;
   cleaningColumnPos: string;
+  cleaningColumnWidth: number;
   shelves: number;
   color: string;
   colorName: string;

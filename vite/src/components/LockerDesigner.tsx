@@ -21,6 +21,7 @@ const LockerDesigner: React.FC = () => {
     legsWidth: CONFIG.LEGS_WIDTH.default,
     columns: CONFIG.COLUMNS.default,
     cleaningColumnPos: CONFIG.CLEANING_COLUMN_POS[2], // right is default
+    cleaningColumnWidth: CONFIG.CLEANING_COLUMN_WIDTH.default,
     shelves: CONFIG.SHELVES.default,
     color: COLOR_OPTIONS[0].color,
     colorName: COLOR_OPTIONS[0].name,
@@ -147,6 +148,16 @@ const LockerDesigner: React.FC = () => {
               formatOption={(option) =>
                 option.toString().charAt(0).toUpperCase() +
                 option.toString().slice(1)
+              }
+            />
+            <RangeControl
+              id="cleaning-column-width"
+              label="Cleaning Column Width"
+              config={CONFIG.CLEANING_COLUMN_WIDTH}
+              value={lockerState.cleaningColumnWidth}
+              unit="cm"
+              onChange={(value) =>
+                handleValueChange("cleaningColumnWidth", value)
               }
             />
           </div>

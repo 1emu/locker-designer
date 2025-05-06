@@ -15,6 +15,7 @@ const LockerVisualization: React.FC<LockerVisualizationProps> = ({
     columns,
     shelves,
     cleaningColumnPos,
+    cleaningColumnWidth,
     legsLength,
     legsWidth,
     color,
@@ -37,9 +38,6 @@ const LockerVisualization: React.FC<LockerVisualizationProps> = ({
   const offsetX = (svgWidth - scaledWidth) / 2;
   const offsetY = (svgHeight - (scaledHeight + scaledLegs)) / 2;
 
-  // Calculate column width
-  const columnWidthActual = scaledWidth / columns;
-
   // Determine which column is the cleaning column
   let cleaningColIdx = -1;
   if (includeCleaningColumn) {
@@ -47,6 +45,34 @@ const LockerVisualization: React.FC<LockerVisualizationProps> = ({
     else if (cleaningColumnPos === "middle")
       cleaningColIdx = Math.floor(columns / 2);
     else if (cleaningColumnPos === "right") cleaningColIdx = columns - 1;
+  }
+
+  // Calculate column widths based on cleaning column width
+  const scaledCleaningColumnWidth = includeCleaningColumn
+    ? cleaningColumnWidth * scale
+    : 0;
+  const remainingWidth =
+    scaledWidth - (includeCleaningColumn ? scaledCleaningColumnWidth : 0);
+  const regularColumnCount = includeCleaningColumn ? columns - 1 : columns;
+  const regularColumnWidth =
+    regularColumnCount > 0 ? remainingWidth / regularColumnCount : 0;
+
+  // Calculate the actual width for each column
+  const columnWidths: number[] = [];
+  for (let i = 0; i < columns; i++) {
+    columnWidths.push(
+      i === cleaningColIdx && includeCleaningColumn
+        ? scaledCleaningColumnWidth
+        : regularColumnWidth
+    );
+  }
+
+  // Calculate the starting x position for each column
+  const columnStartX: number[] = [];
+  let currentX = offsetX;
+  for (let i = 0; i < columns; i++) {
+    columnStartX.push(currentX);
+    currentX += columnWidths[i];
   }
 
   // Get regular column indices
@@ -72,16 +98,17 @@ const LockerVisualization: React.FC<LockerVisualizationProps> = ({
     const columnElements = [];
 
     for (let i = 0; i < columns; i++) {
-      const columnX = offsetX + i * columnWidthActual;
+      const columnX = columnStartX[i];
+      const columnWidth = columnWidths[i];
 
       // Column divider (except for the last column)
       if (i < columns - 1) {
         columnElements.push(
           <line
             key={`divider-${i}`}
-            x1={columnX + columnWidthActual}
+            x1={columnX + columnWidth}
             y1={offsetY}
-            x2={columnX + columnWidthActual}
+            x2={columnX + columnWidth}
             y2={offsetY + scaledHeight}
             stroke="#000"
             strokeWidth="2"
@@ -98,7 +125,7 @@ const LockerVisualization: React.FC<LockerVisualizationProps> = ({
           key={`door-${i}`}
           x={columnX + 2}
           y={offsetY + 2}
-          width={columnWidthActual - 4}
+          width={columnWidth - 4}
           height={scaledHeight - 4}
           fill={color}
           stroke="#000"
@@ -110,18 +137,18 @@ const LockerVisualization: React.FC<LockerVisualizationProps> = ({
       let handleX = null;
       if (isCleaningColumn) {
         // Cleaning column: handle on the right edge
-        handleX = columnX + columnWidthActual - 10;
+        handleX = columnX + columnWidth - 10;
       } else {
         // Find which pair this column belongs to and if it's left or right in the pair
         let pairIdx = pairs.findIndex((pair) => pair.includes(i));
         if (pairIdx !== -1 && pairs[pairIdx].length === 2) {
           if (pairs[pairIdx][0] === i) {
-            handleX = columnX + columnWidthActual - 10;
+            handleX = columnX + columnWidth - 10;
           } else {
             handleX = columnX + 10;
           }
         } else {
-          handleX = columnX + columnWidthActual - 10;
+          handleX = columnX + columnWidth - 10;
         }
       }
 
@@ -167,17 +194,17 @@ const LockerVisualization: React.FC<LockerVisualizationProps> = ({
       // Lock (match handle logic)
       let lockX = null;
       if (isCleaningColumn) {
-        lockX = columnX + columnWidthActual - 10;
+        lockX = columnX + columnWidth - 10;
       } else {
         let pairIdx = pairs.findIndex((pair) => pair.includes(i));
         if (pairIdx !== -1 && pairs[pairIdx].length === 2) {
           if (pairs[pairIdx][0] === i) {
-            lockX = columnX + columnWidthActual - 10;
+            lockX = columnX + columnWidth - 10;
           } else {
             lockX = columnX + 10;
           }
         } else {
-          lockX = columnX + columnWidthActual - 10;
+          lockX = columnX + columnWidth - 10;
         }
       }
 
@@ -200,7 +227,7 @@ const LockerVisualization: React.FC<LockerVisualizationProps> = ({
             key={`shelf-cleaning-${i}`}
             x1={columnX + 2}
             y1={shelfY}
-            x2={columnX + columnWidthActual - 2}
+            x2={columnX + columnWidth - 2}
             y2={shelfY}
             stroke="#000"
             strokeWidth="1"
@@ -212,9 +239,9 @@ const LockerVisualization: React.FC<LockerVisualizationProps> = ({
         columnElements.push(
           <line
             key={`broom-stick-${i}`}
-            x1={columnX + columnWidthActual / 2}
+            x1={columnX + columnWidth / 2}
             y1={shelfY + 20}
-            x2={columnX + columnWidthActual / 2}
+            x2={columnX + columnWidth / 2}
             y2={offsetY + scaledHeight - 20}
             stroke="#555"
             strokeWidth="2"
@@ -224,7 +251,7 @@ const LockerVisualization: React.FC<LockerVisualizationProps> = ({
         columnElements.push(
           <rect
             key={`broom-bottom-${i}`}
-            x={columnX + columnWidthActual / 2 - 10}
+            x={columnX + columnWidth / 2 - 10}
             y={offsetY + scaledHeight - 30}
             width={20}
             height={10}
@@ -241,7 +268,7 @@ const LockerVisualization: React.FC<LockerVisualizationProps> = ({
               key={`shelf-${i}-${j}`}
               x1={columnX + 2}
               y1={shelfY}
-              x2={columnX + columnWidthActual - 2}
+              x2={columnX + columnWidth - 2}
               y2={shelfY}
               stroke="#000"
               strokeWidth="1"

@@ -13,6 +13,7 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({ lockerState }) => {
     columns,
     shelves,
     cleaningColumnPos,
+    cleaningColumnWidth,
     legsLength,
     color,
     colorName,
@@ -21,6 +22,11 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({ lockerState }) => {
 
   // Calculate shelf height
   const shelfHeight = ((height - legsLength) / shelves).toFixed(1);
+
+  // Calculate regular column width
+  const regularColumnWidth = includeCleaningColumn
+    ? ((width - cleaningColumnWidth) / (columns - 1)).toFixed(1)
+    : (width / columns).toFixed(1);
 
   return (
     <div className="details-panel">
@@ -36,9 +42,19 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({ lockerState }) => {
         <span>
           {columns} columns
           {includeCleaningColumn &&
-            ` with 1 cleaning column (${cleaningColumnPos} position)`}
+            ` with 1 cleaning column (${cleaningColumnPos} position, ${cleaningColumnWidth} cm width)`}
         </span>
       </div>
+      {includeCleaningColumn && (
+        <div className="detail-item">
+          <span className="label">Column Widths:</span>
+          <span>
+            Regular columns: {regularColumnWidth} cm each
+            <br />
+            Cleaning column: {cleaningColumnWidth} cm
+          </span>
+        </div>
+      )}
       <div className="detail-item">
         <span className="label">Storage Capacity:</span>
         <span>

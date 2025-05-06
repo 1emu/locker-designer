@@ -8,6 +8,7 @@ export const CONFIG: LockerConfig = {
   LEGS_WIDTH: { options: [2, 10], default: 2 },
   COLUMNS: { min: 2, max: 5, default: 3 },
   SHELVES: { min: 3, max: 6, default: 4 },
+  CLEANING_COLUMN_WIDTH: { min: 20, max: 100, default: 40 },
   CLEANING_COLUMN_POS: ["left", "middle", "right"],
   DOOR_TYPES: ["standard", "perforated", "glass"],
   HANDLE_STYLES: ["vertical", "horizontal", "recessed"],
