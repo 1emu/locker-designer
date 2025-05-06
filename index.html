@@ -382,50 +382,53 @@
         </div>
       </div>
 
-      <button
-        class="btn"
-        id="copy-url-btn"
-        style="display: flex; align-items: center; gap: 8px"
-      >
-        <span>Share your design</span>
-        <svg
-          id="copy-icon"
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          viewBox="0 0 20 20"
-          fill="none"
+      <div style="display: flex; justify-content: center; align-items: center">
+        <button
+          class="btn"
+          id="copy-url-btn"
+          style="display: flex; align-items: center; gap: 8px; max-width: 200px"
         >
-          <rect
-            x="5"
-            y="7"
-            width="9"
-            height="10"
-            rx="2"
-            stroke="white"
-            stroke-width="1"
-          />
-          <rect
-            x="10"
-            y="3"
-            width="9"
-            height="10"
-            rx="2"
-            stroke="white"
-            stroke-width="1"
-          />
-        </svg>
-      </button>
-      <span
-        id="copy-feedback"
-        style="
-          margin-left: 12px;
-          color: #4caf50;
-          font-weight: bold;
-          display: none;
-        "
-        >Copied!</span
-      >
+          <span>Share your design</span>
+          <svg
+            id="copy-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+          >
+            <rect
+              x="5"
+              y="7"
+              width="9"
+              height="10"
+              rx="2"
+              stroke="white"
+              stroke-width="1"
+            />
+            <rect
+              x="10"
+              y="3"
+              width="9"
+              height="10"
+              rx="2"
+              stroke="white"
+              stroke-width="1"
+            />
+          </svg>
+        </button>
+        <span
+          id="copy-feedback"
+          style="
+            margin-left: 12px;
+            color: #4caf50;
+            font-weight: bold;
+            display: none;
+            align-self: center;
+          "
+          >Copied!</span
+        >
+      </div>
     </div>
 
     <script>
@@ -1081,7 +1084,7 @@
           window.location.pathname
         }?${toQueryString(params)}`;
         navigator.clipboard.writeText(url).then(() => {
-          copyFeedback.style.display = "inline";
+          copyFeedback.style.display = "flex";
           setTimeout(() => {
             copyFeedback.style.display = "none";
           }, 1500);
