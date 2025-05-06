@@ -26,39 +26,59 @@ const ShareButton: React.FC<ShareButtonProps> = ({ lockerState }) => {
   };
 
   return (
-    <div style={{ display: "flex", alignItems: "center" }}>
-      <button className="btn" onClick={handleCopyUrl}>
-        <span>Share your design</span>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          viewBox="0 0 20 20"
-          fill="none"
-        >
-          <rect
-            x="5"
-            y="7"
-            width="9"
-            height="10"
-            rx="2"
-            stroke="white"
-            strokeWidth="1"
-          />
-          <rect
-            x="10"
-            y="3"
-            width="9"
-            height="10"
-            rx="2"
-            stroke="white"
-            strokeWidth="1"
-          />
-        </svg>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        width: "100%",
+        justifyContent: "center",
+      }}
+    >
+      <button
+        className="btn"
+        onClick={handleCopyUrl}
+        disabled={showCopyFeedback}
+        style={{
+          width: "200px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {showCopyFeedback ? (
+          <span>Copied!</span>
+        ) : (
+          <>
+            <span>Share your design</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+            >
+              <rect
+                x="5"
+                y="7"
+                width="9"
+                height="10"
+                rx="2"
+                stroke="white"
+                strokeWidth="1"
+              />
+              <rect
+                x="10"
+                y="3"
+                width="9"
+                height="10"
+                rx="2"
+                stroke="white"
+                strokeWidth="1"
+              />
+            </svg>
+          </>
+        )}
       </button>
-      <span className={`copy-feedback ${showCopyFeedback ? "visible" : ""}`}>
-        Copied!
-      </span>
     </div>
   );
 };
