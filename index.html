@@ -322,6 +322,13 @@
             <select id="handle-style"></select>
           </div>
         </div>
+
+        <div class="control-item">
+          <label
+            ><input type="checkbox" id="include-cleaning-column" checked />
+            Include cleaning column?</label
+          >
+        </div>
       </div>
 
       <div class="visualization">
@@ -434,26 +441,6 @@
         CLEANING_COLUMN_POS: ["left", "middle", "right"],
         DOOR_TYPES: ["standard", "perforated", "glass"],
         HANDLE_STYLES: ["vertical", "horizontal", "recessed"],
-        COLOR_OPTIONS: [
-          { hex: "#F5F5F0", name: "Blanco Sucio" },
-          { hex: "#F7F3D7", name: "Beige" },
-          { hex: "#FFFDD0", name: "Crema" },
-          { hex: "#FFFF54", name: "Amarillo" },
-          { hex: "#BDBDBD", name: "Gris Claro" },
-          { hex: "#F6C6C6", name: "Rosa Pastel" },
-          { hex: "#B6E8F7", name: "Celeste Pastel" },
-          { hex: "#B6B6E8", name: "Violeta Pastel" },
-          { hex: "#B6E8C6", name: "Verde agua" },
-          { hex: "#5B7F5B", name: "Verde Medio" },
-          { hex: "#3C5B3C", name: "Verde Ingles" },
-          { hex: "#FFA726", name: "Naranja" },
-          { hex: "#F44336", name: "Rojo" },
-          { hex: "#E25822", name: "Bermellón" },
-          { hex: "#6D6A6A", name: "Gris Topo" },
-          { hex: "#7B4A12", name: "Marrón Brillante" },
-          { hex: "#0000FF", name: "Azul Brillante" },
-          { hex: "#000000", name: "Negro" },
-        ],
       };
 
       // DOM Elements
@@ -487,10 +474,14 @@
       const legsLengthSlider = document.getElementById("legs-length");
       const legsLengthValue = document.getElementById("legs-length-value");
       const legsWidthSelect = document.getElementById("legs-width");
+      const includeCleaningColumnCheckbox = document.getElementById(
+        "include-cleaning-column"
+      );
 
       // State
-      let currentColor = CONFIG.COLOR_OPTIONS[0].hex;
-      let currentColorName = CONFIG.COLOR_OPTIONS[0].name;
+      let currentColor = "#F5F5F0";
+      let currentColorName = "Blanco Sucio";
+      let includeCleaningColumn = true;
 
       // Update functions
       function updateValue(slider, valueElement) {
@@ -584,15 +575,18 @@
         // Draw columns
         // Determine which column is the cleaning column
         let cleaningColIdx = -1;
-        if (cleaningPos === "left") cleaningColIdx = 0;
-        else if (cleaningPos === "middle")
-          cleaningColIdx = Math.floor(columns / 2);
-        else if (cleaningPos === "right") cleaningColIdx = columns - 1;
-
-        // For regular columns, pair them for gate-style handles
         let regularColIndices = [];
-        for (let i = 0; i < columns; i++) {
-          if (i !== cleaningColIdx) regularColIndices.push(i);
+        if (includeCleaningColumn) {
+          if (cleaningPos === "left") cleaningColIdx = 0;
+          else if (cleaningPos === "middle")
+            cleaningColIdx = Math.floor(columns / 2);
+          else if (cleaningPos === "right") cleaningColIdx = columns - 1;
+          for (let i = 0; i < columns; i++) {
+            if (i !== cleaningColIdx) regularColIndices.push(i);
+          }
+        } else {
+          // All columns are regular
+          for (let i = 0; i < columns; i++) regularColIndices.push(i);
         }
         // Pair up regular columns
         let pairs = [];
@@ -623,7 +617,7 @@
           }
 
           // Determine if this is the cleaning column
-          let isCleaningColumn = i === cleaningColIdx;
+          let isCleaningColumn = includeCleaningColumn && i === cleaningColIdx;
 
           // Draw door
           const door = document.createElementNS(
@@ -649,14 +643,11 @@
             let pairIdx = pairs.findIndex((pair) => pair.includes(i));
             if (pairIdx !== -1 && pairs[pairIdx].length === 2) {
               if (pairs[pairIdx][0] === i) {
-                // Left column of pair: handle on right edge
                 handleX = columnX + columnWidthActual - 10;
               } else {
-                // Right column of pair: handle on left edge
                 handleX = columnX + 10;
               }
             } else {
-              // Unpaired: handle on right edge
               handleX = columnX + columnWidthActual - 10;
             }
           }
@@ -708,14 +699,11 @@
             let pairIdx = pairs.findIndex((pair) => pair.includes(i));
             if (pairIdx !== -1 && pairs[pairIdx].length === 2) {
               if (pairs[pairIdx][0] === i) {
-                // Left column of pair: lock on right edge
                 lockX = columnX + columnWidthActual - 10;
               } else {
-                // Right column of pair: lock on left edge
                 lockX = columnX + 10;
               }
             } else {
-              // Unpaired: lock on right edge
               lockX = columnX + columnWidthActual - 10;
             }
           }
@@ -826,7 +814,6 @@
 
       colorOptions.forEach((option) => {
         option.addEventListener("click", () => {
-          // Update selected color
           colorOptions.forEach((opt) => opt.classList.remove("selected"));
           option.classList.add("selected");
           currentColor = option.dataset.color;
@@ -843,6 +830,11 @@
 
       legsWidthSelect.addEventListener("change", updateLocker);
 
+      includeCleaningColumnCheckbox.addEventListener("change", () => {
+        includeCleaningColumn = includeCleaningColumnCheckbox.checked;
+        updateLocker();
+      });
+
       // --- Add this utility for serializing state to query string ---
       function getCurrentParams() {
         return {
@@ -858,6 +850,7 @@
           colorName: currentColorName,
           doorType: doorType.value,
           handleStyle: handleStyle.value,
+          includeCleaningColumn: includeCleaningColumn,
         };
       }
       function toQueryString(params) {
@@ -960,6 +953,19 @@
             CONFIG.HANDLE_STYLES,
             CONFIG.HANDLE_STYLES[0]
           );
+        if (params.has("includeCleaningColumn")) {
+          includeCleaningColumn =
+            params.get("includeCleaningColumn") === "true";
+          includeCleaningColumnCheckbox.checked = includeCleaningColumn;
+          // Hide/show cleaning column position select
+          const cleaningColPosGroup =
+            cleaningColumnPos.closest(".control-item");
+          if (includeCleaningColumn) {
+            cleaningColPosGroup.style.display = "";
+          } else {
+            cleaningColPosGroup.style.display = "none";
+          }
+        }
         // Update all value displays
         updateValue(heightSlider, heightValue);
         updateValue(widthSlider, widthValue);
@@ -1043,42 +1049,15 @@
           handleStyle.appendChild(option);
         });
 
-        // Color options
-        const colorOptionsContainer = document.querySelector(".color-options");
-        colorOptionsContainer.innerHTML = "";
-        CONFIG.COLOR_OPTIONS.forEach((opt, idx) => {
-          const div = document.createElement("div");
-          div.className = "color-option" + (idx === 0 ? " selected" : "");
-          div.style.backgroundColor = opt.hex;
-          div.dataset.color = opt.hex;
-          div.dataset.name = opt.name;
-          colorOptionsContainer.appendChild(div);
-        });
-
         // Set initial details panel
         dimensionsDetails.textContent = `${CONFIG.WIDTH.default} × ${CONFIG.DEPTH.default} × ${CONFIG.HEIGHT.default} cm (Width × Depth × Height)`;
         configDetails.textContent = `${CONFIG.COLUMNS.default} columns with 1 cleaning column (right position)`;
         capacityDetails.textContent = `${CONFIG.SHELVES.default} regular shelves + 1 cleaning supplies area`;
-        colorDetails.textContent = `${CONFIG.COLOR_OPTIONS[0].name} (${CONFIG.COLOR_OPTIONS[0].hex})`;
+        colorDetails.textContent = `${currentColorName} (${currentColor})`;
 
         // Set initial state
-        currentColor = CONFIG.COLOR_OPTIONS[0].hex;
-        currentColorName = CONFIG.COLOR_OPTIONS[0].name;
-
-        // Re-query colorOptions after dynamic creation
-        window.colorOptions = document.querySelectorAll(".color-option");
-
-        // Attach color option event listeners
-        colorOptions.forEach((option) => {
-          option.addEventListener("click", () => {
-            colorOptions.forEach((opt) => opt.classList.remove("selected"));
-            option.classList.add("selected");
-            currentColor = option.dataset.color;
-            currentColorName = option.dataset.name;
-            colorDetails.textContent = `${currentColorName} (${currentColor})`;
-            updateLocker();
-          });
-        });
+        currentColor = "#F5F5F0";
+        currentColorName = "Blanco Sucio";
 
         // Now apply params from URL (overrides defaults if present)
         applyParamsFromUrl();
@@ -1091,6 +1070,23 @@
 
       // Initialize
       updateLocker();
+
+      // --- Copy URL button: copy to clipboard and show feedback ---
+      copyUrlBtn.addEventListener("click", () => {
+        const params = getCurrentParams();
+        // Use up-to-date currentColor and currentColorName
+        params.color = currentColor;
+        params.colorName = currentColorName;
+        const url = `${window.location.origin}${
+          window.location.pathname
+        }?${toQueryString(params)}`;
+        navigator.clipboard.writeText(url).then(() => {
+          copyFeedback.style.display = "inline";
+          setTimeout(() => {
+            copyFeedback.style.display = "none";
+          }, 1500);
+        });
+      });
     </script>
   </body>
 </html>
