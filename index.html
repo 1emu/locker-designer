@@ -134,64 +134,36 @@
           <h3>Size</h3>
           <div class="control-item">
             <label for="height">Height (cm)</label>
-            <input
-              type="range"
-              id="height"
-              min="180"
-              max="185"
-              value="182"
-              step="1"
-            />
-            <div class="value-display">
-              <span id="height-value">182</span> cm
-            </div>
+            <input type="range" id="height" min="" max="" value="" step="1" />
+            <div class="value-display"><span id="height-value"></span> cm</div>
           </div>
           <div class="control-item">
             <label for="width">Width (cm)</label>
-            <input
-              type="range"
-              id="width"
-              min="120"
-              max="128"
-              value="124"
-              step="1"
-            />
-            <div class="value-display">
-              <span id="width-value">124</span> cm
-            </div>
+            <input type="range" id="width" min="" max="" value="" step="1" />
+            <div class="value-display"><span id="width-value"></span> cm</div>
           </div>
           <div class="control-item">
             <label for="depth">Depth (cm)</label>
-            <input
-              type="range"
-              id="depth"
-              min="40"
-              max="60"
-              value="50"
-              step="1"
-            />
-            <div class="value-display"><span id="depth-value">50</span> cm</div>
+            <input type="range" id="depth" min="" max="" value="" step="1" />
+            <div class="value-display"><span id="depth-value"></span> cm</div>
           </div>
           <div class="control-item">
             <label for="legs-length">Legs Length (cm)</label>
             <input
               type="range"
               id="legs-length"
-              min="0"
-              max="20"
-              value="10"
+              min=""
+              max=""
+              value=""
               step="1"
             />
             <div class="value-display">
-              <span id="legs-length-value">10</span> cm
+              <span id="legs-length-value"></span> cm
             </div>
           </div>
           <div class="control-item">
             <label for="legs-width">Leg Width (cm)</label>
-            <select id="legs-width">
-              <option value="2" selected>2 cm</option>
-              <option value="10">10 cm</option>
-            </select>
+            <select id="legs-width"></select>
           </div>
         </div>
 
@@ -199,40 +171,29 @@
           <h3>Configuration</h3>
           <div class="control-item">
             <label for="columns">Number of Columns</label>
-            <input
-              type="range"
-              id="columns"
-              min="3"
-              max="4"
-              value="3"
-              step="1"
-            />
+            <input type="range" id="columns" min="" max="" value="" step="1" />
             <div class="value-display">
-              <span id="columns-value">3</span> columns
+              <span id="columns-value"></span> columns
             </div>
           </div>
           <div class="control-item">
             <label for="cleaning-column-position"
               >Cleaning Column Position</label
             >
-            <select id="cleaning-column-position">
-              <option value="left">Left</option>
-              <option value="middle">Middle</option>
-              <option value="right" selected>Right</option>
-            </select>
+            <select id="cleaning-column-position"></select>
           </div>
           <div class="control-item">
             <label for="shelves-per-column">Shelves in Regular Columns</label>
             <input
               type="range"
               id="shelves-per-column"
-              min="3"
-              max="6"
-              value="4"
+              min=""
+              max=""
+              value=""
               step="1"
             />
             <div class="value-display">
-              <span id="shelves-value">4</span> shelves
+              <span id="shelves-value"></span> shelves
             </div>
           </div>
         </div>
@@ -354,19 +315,11 @@
           </div>
           <div class="control-item">
             <label for="door-type">Door Type</label>
-            <select id="door-type">
-              <option value="standard" selected>Standard</option>
-              <option value="perforated">Perforated</option>
-              <option value="glass">Glass Insert</option>
-            </select>
+            <select id="door-type"></select>
           </div>
           <div class="control-item">
             <label for="handle-style">Handle Style</label>
-            <select id="handle-style">
-              <option value="vertical" selected>Vertical</option>
-              <option value="horizontal">Horizontal</option>
-              <option value="recessed">Recessed</option>
-            </select>
+            <select id="handle-style"></select>
           </div>
         </div>
       </div>
@@ -387,19 +340,22 @@
         <div class="detail-item">
           <span class="label">External Dimensions:</span>
           <span id="dimensions-details"
-            >124 × 50 × 182 cm (Width × Depth × Height)</span
+            >CONFIG.WIDTH.default × CONFIG.DEPTH.default × CONFIG.HEIGHT.default
+            cm (Width × Depth × Height)</span
           >
         </div>
         <div class="detail-item">
           <span class="label">Configuration:</span>
           <span id="config-details"
-            >3 columns with 1 cleaning column (right position)</span
+            >CONFIG.COLUMNS.default columns with 1 cleaning column (right
+            position)</span
           >
         </div>
         <div class="detail-item">
           <span class="label">Storage Capacity:</span>
           <span id="capacity-details"
-            >8 regular shelves + 1 cleaning supplies area</span
+            >CONFIG.SHELVES.default regular shelves + 1 cleaning supplies
+            area</span
           >
         </div>
         <div class="detail-item">
@@ -407,7 +363,7 @@
         </div>
         <div class="detail-item">
           <span class="label">Color:</span>
-          <span id="color-details">Blanco Sucio (#F5F5F0)</span>
+          <span id="color-details">CONFIG.COLOR_OPTIONS[0].name</span>
         </div>
         <div class="detail-item">
           <span class="label">Shelf Height (regular columns):</span>
@@ -469,7 +425,7 @@
       // --- CONFIGURATION: All magic numbers and defaults here ---
       const CONFIG = {
         HEIGHT: { min: 60, max: 200, default: 180 },
-        WIDTH: { min: 35, max: 408, default: 120 },
+        WIDTH: { min: 35, max: 400, default: 120 },
         DEPTH: { min: 38, max: 60, default: 50 },
         LEGS_LENGTH: { min: 0, max: 20, default: 10 },
         LEGS_WIDTH: { options: [2, 10], default: 2 },
@@ -533,8 +489,8 @@
       const legsWidthSelect = document.getElementById("legs-width");
 
       // State
-      let currentColor = "#F5F5F0";
-      let currentColorName = "Blanco Sucio";
+      let currentColor = CONFIG.COLOR_OPTIONS[0].hex;
+      let currentColorName = CONFIG.COLOR_OPTIONS[0].name;
 
       // Update functions
       function updateValue(slider, valueElement) {
@@ -923,31 +879,55 @@
         }
         // Set values if present and valid
         if (params.has("height"))
-          heightSlider.value = clamp(params.get("height"), 180, 185);
+          heightSlider.value = clamp(
+            params.get("height"),
+            CONFIG.HEIGHT.min,
+            CONFIG.HEIGHT.max
+          );
         if (params.has("width"))
-          widthSlider.value = clamp(params.get("width"), 120, 128);
+          widthSlider.value = clamp(
+            params.get("width"),
+            CONFIG.WIDTH.min,
+            CONFIG.WIDTH.max
+          );
         if (params.has("depth"))
-          depthSlider.value = clamp(params.get("depth"), 40, 60);
+          depthSlider.value = clamp(
+            params.get("depth"),
+            CONFIG.DEPTH.min,
+            CONFIG.DEPTH.max
+          );
         if (params.has("legsLength"))
-          legsLengthSlider.value = clamp(params.get("legsLength"), 0, 20);
+          legsLengthSlider.value = clamp(
+            params.get("legsLength"),
+            CONFIG.LEGS_LENGTH.min,
+            CONFIG.LEGS_LENGTH.max
+          );
         if (typeof legsWidthSelect !== "undefined" && legsWidthSelect) {
           if (params.has("legsWidth"))
             legsWidthSelect.value = pick(
               params.get("legsWidth"),
-              ["2", "10"],
-              "2"
+              CONFIG.LEGS_WIDTH.options,
+              CONFIG.LEGS_WIDTH.default.toString()
             );
         }
         if (params.has("columns"))
-          columnsSlider.value = clamp(params.get("columns"), 3, 4);
+          columnsSlider.value = clamp(
+            params.get("columns"),
+            CONFIG.COLUMNS.min,
+            CONFIG.COLUMNS.max
+          );
         if (params.has("cleaningColumnPos"))
           cleaningColumnPos.value = pick(
             params.get("cleaningColumnPos"),
-            ["left", "middle", "right"],
-            "right"
+            CONFIG.CLEANING_COLUMN_POS,
+            CONFIG.CLEANING_COLUMN_POS[2]
           );
         if (params.has("shelves"))
-          shelvesSlider.value = clamp(params.get("shelves"), 3, 6);
+          shelvesSlider.value = clamp(
+            params.get("shelves"),
+            CONFIG.SHELVES.min,
+            CONFIG.SHELVES.max
+          );
         if (params.has("color")) {
           // Find color option with this hex
           let found = false;
@@ -971,14 +951,14 @@
         if (params.has("doorType"))
           doorType.value = pick(
             params.get("doorType"),
-            ["standard", "perforated", "glass"],
-            "standard"
+            CONFIG.DOOR_TYPES,
+            CONFIG.DOOR_TYPES[0]
           );
         if (params.has("handleStyle"))
           handleStyle.value = pick(
             params.get("handleStyle"),
-            ["vertical", "horizontal", "recessed"],
-            "vertical"
+            CONFIG.HANDLE_STYLES,
+            CONFIG.HANDLE_STYLES[0]
           );
         // Update all value displays
         updateValue(heightSlider, heightValue);
@@ -991,19 +971,117 @@
         updateLocker();
       }
       // --- On page load, apply params ---
-      window.addEventListener("DOMContentLoaded", applyParamsFromUrl);
-      // --- Copy URL button: copy to clipboard and show feedback ---
-      copyUrlBtn.addEventListener("click", () => {
-        const params = getCurrentParams();
-        const url = `${window.location.origin}${
-          window.location.pathname
-        }?${toQueryString(params)}`;
-        navigator.clipboard.writeText(url).then(() => {
-          copyFeedback.style.display = "inline";
-          setTimeout(() => {
-            copyFeedback.style.display = "none";
-          }, 1500);
+      window.addEventListener("DOMContentLoaded", () => {
+        // Set slider and select attributes from CONFIG
+        heightSlider.min = CONFIG.HEIGHT.min;
+        heightSlider.max = CONFIG.HEIGHT.max;
+        heightSlider.value = CONFIG.HEIGHT.default;
+        heightValue.textContent = CONFIG.HEIGHT.default;
+
+        widthSlider.min = CONFIG.WIDTH.min;
+        widthSlider.max = CONFIG.WIDTH.max;
+        widthSlider.value = CONFIG.WIDTH.default;
+        widthValue.textContent = CONFIG.WIDTH.default;
+
+        depthSlider.min = CONFIG.DEPTH.min;
+        depthSlider.max = CONFIG.DEPTH.max;
+        depthSlider.value = CONFIG.DEPTH.default;
+        depthValue.textContent = CONFIG.DEPTH.default;
+
+        legsLengthSlider.min = CONFIG.LEGS_LENGTH.min;
+        legsLengthSlider.max = CONFIG.LEGS_LENGTH.max;
+        legsLengthSlider.value = CONFIG.LEGS_LENGTH.default;
+        legsLengthValue.textContent = CONFIG.LEGS_LENGTH.default;
+
+        // Legs width select
+        legsWidthSelect.innerHTML = "";
+        CONFIG.LEGS_WIDTH.options.forEach((opt) => {
+          const option = document.createElement("option");
+          option.value = opt;
+          option.textContent = `${opt} cm`;
+          if (opt === CONFIG.LEGS_WIDTH.default) option.selected = true;
+          legsWidthSelect.appendChild(option);
         });
+
+        columnsSlider.min = CONFIG.COLUMNS.min;
+        columnsSlider.max = CONFIG.COLUMNS.max;
+        columnsSlider.value = CONFIG.COLUMNS.default;
+        columnsValue.textContent = CONFIG.COLUMNS.default;
+
+        shelvesSlider.min = CONFIG.SHELVES.min;
+        shelvesSlider.max = CONFIG.SHELVES.max;
+        shelvesSlider.value = CONFIG.SHELVES.default;
+        shelvesValue.textContent = CONFIG.SHELVES.default;
+
+        // Cleaning column position select
+        cleaningColumnPos.innerHTML = "";
+        CONFIG.CLEANING_COLUMN_POS.forEach((pos) => {
+          const option = document.createElement("option");
+          option.value = pos;
+          option.textContent = pos.charAt(0).toUpperCase() + pos.slice(1);
+          if (pos === CONFIG.CLEANING_COLUMN_POS[2]) option.selected = true;
+          cleaningColumnPos.appendChild(option);
+        });
+
+        // Door type select
+        doorType.innerHTML = "";
+        CONFIG.DOOR_TYPES.forEach((type) => {
+          const option = document.createElement("option");
+          option.value = type;
+          option.textContent = type.charAt(0).toUpperCase() + type.slice(1);
+          if (type === CONFIG.DOOR_TYPES[0]) option.selected = true;
+          doorType.appendChild(option);
+        });
+
+        // Handle style select
+        handleStyle.innerHTML = "";
+        CONFIG.HANDLE_STYLES.forEach((style) => {
+          const option = document.createElement("option");
+          option.value = style;
+          option.textContent = style.charAt(0).toUpperCase() + style.slice(1);
+          if (style === CONFIG.HANDLE_STYLES[0]) option.selected = true;
+          handleStyle.appendChild(option);
+        });
+
+        // Color options
+        const colorOptionsContainer = document.querySelector(".color-options");
+        colorOptionsContainer.innerHTML = "";
+        CONFIG.COLOR_OPTIONS.forEach((opt, idx) => {
+          const div = document.createElement("div");
+          div.className = "color-option" + (idx === 0 ? " selected" : "");
+          div.style.backgroundColor = opt.hex;
+          div.dataset.color = opt.hex;
+          div.dataset.name = opt.name;
+          colorOptionsContainer.appendChild(div);
+        });
+
+        // Set initial details panel
+        dimensionsDetails.textContent = `${CONFIG.WIDTH.default} × ${CONFIG.DEPTH.default} × ${CONFIG.HEIGHT.default} cm (Width × Depth × Height)`;
+        configDetails.textContent = `${CONFIG.COLUMNS.default} columns with 1 cleaning column (right position)`;
+        capacityDetails.textContent = `${CONFIG.SHELVES.default} regular shelves + 1 cleaning supplies area`;
+        colorDetails.textContent = `${CONFIG.COLOR_OPTIONS[0].name} (${CONFIG.COLOR_OPTIONS[0].hex})`;
+
+        // Set initial state
+        currentColor = CONFIG.COLOR_OPTIONS[0].hex;
+        currentColorName = CONFIG.COLOR_OPTIONS[0].name;
+
+        // Re-query colorOptions after dynamic creation
+        window.colorOptions = document.querySelectorAll(".color-option");
+
+        // Attach color option event listeners
+        colorOptions.forEach((option) => {
+          option.addEventListener("click", () => {
+            colorOptions.forEach((opt) => opt.classList.remove("selected"));
+            option.classList.add("selected");
+            currentColor = option.dataset.color;
+            currentColorName = option.dataset.name;
+            colorDetails.textContent = `${currentColorName} (${currentColor})`;
+            updateLocker();
+          });
+        });
+
+        // Now apply params from URL (overrides defaults if present)
+        applyParamsFromUrl();
       });
 
       function getColorName(hex) {
